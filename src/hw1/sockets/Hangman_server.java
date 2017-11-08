@@ -13,105 +13,59 @@ import java.util.*;
  * @author ChunHeng Jen
  */
 public class Hangman_server {
-   private static String[] choosenWord = null;
+   
    private static int numWords = 51528;// number of words in the word txt file
    private static ServerSocket Hangman_server_socket;//decalre the socket 
    private static final int PORT = 1234;// port number between the server and the client
 
-   public static void main(String[] args){
+   public static void main(String[] args) throws IOException{
         
-       System.out.println("Opening port");
-       //open the port
+     
        try {
             Hangman_server_socket = new ServerSocket(PORT);//the port number is currenttly just a radom number 1234
-           
+             System.out.println("Opening port");
+              //open the port
 
-       } catch (IOException ex) {
-            System.out.println("Unable to attach to port!");//reference from the textbook
-            System.exit(1);
-        }
-       do {
-            handle_Hangman_client();
-      }while (true);
-       
-   
-    }
-   private static void handle_Hangman_client(){
-       
-       Socket linkA = null;
-       try{
-          //load the file 
-          read_Hangman_client(choosenWord);  //handle reading the file
-          Random rand = new Random();
-          int  randomNum = rand.nextInt(51528) + 0;
-          //get a reandom word
-          String Current_word = choosenWord[randomNum];
-          //get the life of one attempt
-          int life = Current_word.length();
-          int score = 0;
-          
-          
-          
-          //Start the connection
-          linkA = Hangman_server_socket.accept();//accept connection
-          //Set up input & output streams 
-          Scanner Server_input = new Scanner( linkA.getInputStream( ) ); 
-          PrintWriter Server_output = new PrintWriter ( linkA.getOutputStream( ), true );
-          
-          
-          String input_Word = Server_input.nextLine();//get the message from the client
-           //initialize the game by creating the word, read the file, 
-          
-          //read and send data 
-          while(!input_Word.equals("QUIT") ){
-              input_Word = Server_input.nextLine();//continue reading from the client
-              if(input_Word.charAt(0) != Current_word.charAt(0)){
-                  //if guessed wrong
-                  life--;
-                  Server_output.println(Current_word+"Remaining attempt: "+ life +"    Score:"+score);
-                  input_Word = Server_input.nextLine();
-              }
-              else if (input_Word == Current_word){
-                  //if guessed the whole word right
-                  score++;
-                  Server_output.println(Current_word+"Remaining attempt: "+ life +"    Score:"+score);
-                  input_Word = Server_input.nextLine();
-              }
-              else{
-                  //show one leter at the user
-                  
-                  Server_output.println(Current_word+"Remaining attempt: "+ life +"    Score:"+score);
-                  input_Word = Server_input.nextLine();
-              } 
-          }Server_output.println("Toatl Score: "+score);
-           
-       } catch (IOException ex) {
-           System.out.println("Unable to accept connection!");
+       }catch (IOException ioEx){
+           System.out.println("\nUnable to set up port!");
            System.exit(1);
-       }  
-       //Close the connection after the dialogue is complete
-       finally{
-           try {
-               System.out.println("Quiting the game...");
-               linkA.close();
-           }catch(IOException ioEx){
-               System.out.println("Unable to quiting the game!!");
-               System.exit(1);
-           }
        }
+       do {
+            //Wait for client...
+            Socket linkA = Hangman_server_socket.accept();
+            System.out.println("\nNew client accepted.\n");
+            handle_Hangman_client handler = new handle_Hangman_client(linkA);
+            handler.start();
+      }while(true);  
     }
-   
-    private static void read_Hangman_client(String[] message){
-        
+}
+
+class handle_Hangman_client extends Thread {
+    private static String[] choosenWord = null;
+    private Socket client;
+    private Scanner Server_input;
+    private PrintWriter Server_output;
+       
+    public handle_Hangman_client(Socket socket){
+        client = socket;
+        try {
+            Server_input = new Scanner(client.getInputStream());
+            Server_output = new PrintWriter(client.getOutputStream(),true);
+        } catch(IOException ioEx){
+            ioEx.printStackTrace();
+        }   
+    }
+    
+    public void run(){
         //read file
         String read_file = "/Users/davidren/Desktop/words.txt";// open up the file
-        String[] read_line = new String[numWords];//read individual line
+        
         try {
            FileReader file_reader = new FileReader (read_file);
            BufferedReader bufferedReader = new BufferedReader(file_reader);
            int number = 0;
-           while((read_line[number] = bufferedReader.readLine()) != null) { 
-               System.out.println(read_line[number]);
+           while((choosenWord[number] = bufferedReader.readLine()) != null) { 
+               System.out.println(choosenWord[number]);
                    number++;
             }
             bufferedReader.close();  
@@ -122,7 +76,52 @@ public class Hangman_server {
             System.out.println(
             "Error reading file");
         }
-
-    }
-         
+          ;  //handle reading the file
+        Random rand = new Random();
+        int  randomNum = rand.nextInt(51528) + 0;
+          //get a reandom word
+        String Current_word = choosenWord[randomNum];
+          //get the life of one attempt
+        int life = Current_word.length();
+        int score = 0;
+        String input_Word = Server_input.nextLine();//get the message from the client
+           //initialize the game by creating the word, read the file, 
+        do {
+             //read and send data 
+             //Repeat above until 'QUIT' sent by client...
+             if(input_Word.charAt(0) != Current_word.charAt(0)){
+            //if guessed wrong
+                life--;
+                Server_output.println(Current_word+"Remaining attempt: "+ life +"    Score:"+score);
+                input_Word = Server_input.nextLine();//continue reading from the client 
+             }
+             else if (input_Word == Current_word){
+                  //if guessed the whole word right
+                  randomNum = rand.nextInt(51528) + 0;
+                  Current_word = choosenWord[randomNum];
+                  score++;
+                  Server_output.println(Current_word+"Remaining attempt: "+ life +"    Score:"+score);
+                  input_Word = Server_input.nextLine();//continue reading from the client
+              }
+              else{
+                  //show one leter at the user
+                  
+                  Server_output.println(Current_word+"Remaining attempt: "+ life +"    Score:"+score);
+                  input_Word = Server_input.nextLine();//continue reading from the client
+              } 
+          }while (!input_Word.equals("QUIT"));
+          
+            Server_output.println("Toatl Score: "+score);
+                
+        try {
+            if (client != null){
+               System.out.println("Quiting the game...");
+               client.close();
+           }
+        }catch(IOException ioEx){
+               System.out.println("Unable to quiting the game!!");
+               System.exit(1);
+           }
+       //Close the connection after the dialogue is complete
+    }  
  }
