@@ -40,6 +40,7 @@ public class Hangman_server {
     }
 }
 
+
 class handle_Hangman_client extends Thread {
     private static String[] choosenWord = null;
     private Socket client;
