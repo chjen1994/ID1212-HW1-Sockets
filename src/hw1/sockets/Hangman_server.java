@@ -5,20 +5,12 @@
 Take refference from textbook for java intrduction
  */
 package hw1.sockets;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 /**
  *
- * @author davidren
+ * @author ChunHeng Jen
  */
 public class Hangman_server {
    private static String[] choosenWord = null;
