@@ -84,13 +84,24 @@ class handle_Hangman_client extends Thread {
         String Current_word = choosenWord[randomNum];
           //get the life of one attempt
         int life = Current_word.length();
+        int length = life;
         int score = 0;
-        String input_Word = Server_input.nextLine();//get the message from the client
+        
            //initialize the game by creating the word, read the file, 
         do {
+            String input_Word = Server_input.nextLine();//get the message from the client
              //read and send data 
              //Repeat above until 'QUIT' sent by client...
-             if(input_Word.charAt(0) != Current_word.charAt(0)){
+              if (input_Word.length()==1){
+                  //if guessed any letter right, the length will decrease
+                  for(int j = 0; j<Current_word.length(); j++){
+                      if (input_Word.charAt(0) == Current_word.charAt(j)){
+                          Current_word.deleteCharAt(j);
+                          length--;
+                      }
+                  }
+              }
+             if(life == length){
             //if guessed wrong
                 life--;
                 Server_output.println(Current_word+"Remaining attempt: "+ life +"    Score:"+score);
@@ -105,7 +116,7 @@ class handle_Hangman_client extends Thread {
                   input_Word = Server_input.nextLine();//continue reading from the client
               }
               else{
-                  //show one leter at the user
+                  //show the location of the guessed leter to the user
                   
                   Server_output.println(Current_word+"Remaining attempt: "+ life +"    Score:"+score);
                   input_Word = Server_input.nextLine();//continue reading from the client

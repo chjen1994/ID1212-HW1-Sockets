@@ -21,12 +21,12 @@ public class Hangman_ex {
     private static int numWords = 51528;
     
     private static void readWords(){
-        String read_file = "/Users/davidren/Desktop/words.txt";// open up the file
+        String file_location = "/Users/davidren/Desktop/words.txt";// open up the file
     
         String[] read_line = new String[numWords];//read individual line
     
         try {
-            FileReader file_reader = new FileReader (read_file);
+            FileReader file_reader = new FileReader (file_location);
             
             BufferedReader bufferedReader = new BufferedReader(file_reader);
             
@@ -48,9 +48,24 @@ public class Hangman_ex {
         Random rand = new Random();
         int  randomNum = rand.nextInt(51528) + 0;
         int life = read_line[randomNum].length();
+        int Score = 0;
+ 
+        char[] letter = new char [life];
+        int counter = 0;
+        while(counter !=life){
+            //store the letters in the array 
+            letter[counter] = read_line[randomNum].charAt(counter);
+            counter++;
+        }
         
         System.out.println(read_line[randomNum]);
         System.out.println(life);
+        
+        
+        //copy to chosen word for later use
+        String copyWord = read_line[randomNum];
+        int length = copyWord.length();
+        int original_length = copyWord.length();
         
         String  record;//record the right word and display it
         Scanner userEntry = new Scanner(System.in);//read the input from the keyborad
@@ -60,22 +75,37 @@ public class Hangman_ex {
         
         System.out.println(life+ " Letters Word"); 
         
+        int num_dash = life;
+        System.out.println("_ _ _ _ _ _");
         
-        while(life!=0 && sb.length() != 0){
+        System.out.print("Enter: "); 
+            String message = userEntry.nextLine();
+        
+        
+        while(userEntry.nextLine()!="QUIT"){
             //the start of the game
+            //show the dash
             
             System.out.print("Enter: "); 
             String message = userEntry.nextLine();
-            if (message.charAt(0) == sb.charAt(0)){
+            
+            for (int n = 0; n<length; n++){
+                if (message.charAt(n) == sb.charAt(n)){
                 //if the leters enter equals to the readline word then delete the letters using  sb.deleteCharAt(1)
                 sb.deleteCharAt(0);
-
+                length--;
+                }
             }
-            else{
+            if(length == original_length){
                 life--;
+            } else{
+                original_length = length;
             }
+            
+            
             if (sb.length() == 0){
                System.out.print("YOU WON");
+               Score++;
             }
             else{
                 System.out.println("Remaining life: "+life);

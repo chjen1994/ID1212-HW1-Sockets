@@ -55,6 +55,7 @@ public class Hangman_client {
            
        } catch(IOException ioEx){
             ioEx.printStackTrace();
+            System.out.println("Connection Refused...");
        }
        finally{
            try {
