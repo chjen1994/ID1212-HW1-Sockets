@@ -6,12 +6,9 @@ Reference from caveofprogramming
  */
 package hw1.sockets;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Random;
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /**
  *
@@ -20,96 +17,151 @@ import java.util.Scanner;
 public class Hangman_ex {
     private static int numWords = 51528;
     
-    private static void readWords(){
-        String file_location = "/Users/davidren/Desktop/words.txt";// open up the file
-    
-        String[] read_line = new String[numWords];//read individual line
-    
-        try {
-            FileReader file_reader = new FileReader (file_location);
-            
+    private static Scanner KeyboardEntry;
+    public static void main(String[] args){
+        
+        
+        String[] choosenWord = new String [10000000];
+        
+        String read_file = "/Users/davidren/Desktop/words.txt";// open up the file
+        try{
+            FileReader file_reader = new FileReader (read_file);
             BufferedReader bufferedReader = new BufferedReader(file_reader);
-            
             int number = 0;
-            
-            while((read_line[number] = bufferedReader.readLine()) != null) { 
-                System.out.println(read_line[number]);
-                number++;
+           
+           while((choosenWord[number] = bufferedReader.readLine()) != null) { 
+               System.out.println(choosenWord[number]);
+                   number++;
             }
-            
-            bufferedReader.close();                         
-        } catch (FileNotFoundException ex) {
+           bufferedReader.close();
+        } catch(FileNotFoundException ex){
             System.out.println(
-                "Unable to open file");
-        } catch (IOException ex) {
-             System.out.println(
-                "Error reading file");
+                "Unable to open file '");                
         }
+        catch(IOException ex) {
+            System.out.println(
+                "Error reading file '");                  
+            // Or we could just do this: 
+            // ex.printStackTrace();
+        }
+        
+        
+           
+              
+        
+        
+           //handle reading the file
         Random rand = new Random();
         int  randomNum = rand.nextInt(51528) + 0;
-        int life = read_line[randomNum].length();
-        int Score = 0;
- 
-        char[] letter = new char [life];
-        int counter = 0;
-        while(counter !=life){
-            //store the letters in the array 
-            letter[counter] = read_line[randomNum].charAt(counter);
-            counter++;
+          //get a reandom word
+        String Current_word = choosenWord[randomNum];
+          //get the life of one attempt
+        
+        int life = Current_word.length();
+        
+        StringBuilder dash = new StringBuilder(Current_word);
+        
+        //load the dash
+        for (int n = 0; n<life; n++){
+            dash.setCharAt(n, '-');
         }
+        //out put the dash
+        System.out.println( "dash : "+dash);
         
-        System.out.println(read_line[randomNum]);
-        System.out.println(life);
-        
-        
-        //copy to chosen word for later use
-        String copyWord = read_line[randomNum];
-        int length = copyWord.length();
-        int original_length = copyWord.length();
-        
-        String  record;//record the right word and display it
-        Scanner userEntry = new Scanner(System.in);//read the input from the keyborad
-        StringBuilder sb = new StringBuilder(read_line[randomNum]);//put the random word into a string builder object to better delete words
-
-       
-        
-        System.out.println(life+ " Letters Word"); 
-        
-        int num_dash = life;
-        System.out.println("_ _ _ _ _ _");
-        
-        System.out.print("Enter: "); 
-            String message = userEntry.nextLine();
-        
-        
-        while(userEntry.nextLine()!="QUIT"){
-            //the start of the game
-            //show the dash
+        int length = life;
+        int score = 0;
+        System.out.println(
+                "Current word: "+Current_word +"  life:"+ life + "  score:" + score+ "  length:"+ length);
+        System.out.println(
+                "You are now playing hangman!!!!");
+        System.out.println(
+                "Guess the word: ");
+        KeyboardEntry = new Scanner(System.in);
+        String input_Word = new String(KeyboardEntry.nextLine());
+           //initialize the game by creating the word, read the file, 
+        String QUIT = new String("QUIT");
+        //System.out.println(input_Word); 
+        while (!input_Word.equals(QUIT)) {
             
-            System.out.print("Enter: "); 
-            String message = userEntry.nextLine();
-            
-            for (int n = 0; n<length; n++){
-                if (message.charAt(n) == sb.charAt(n)){
-                //if the leters enter equals to the readline word then delete the letters using  sb.deleteCharAt(1)
-                sb.deleteCharAt(0);
-                length--;
-                }
-            }
-            if(length == original_length){
+             int bool = 0;
+             
+             //read and send data 
+             //Repeat above until 'QUIT' sent by client...
+              if (input_Word.length()==1){
+                  //if guessed any letter right, the length will decrease
+                  for(int j = 0; j<Current_word.length(); j++){
+                      if (input_Word.charAt(0) == Current_word.charAt(j)){
+                          //Current_word.deleteCharAt(j);
+                          dash.setCharAt(j, Current_word.charAt(j));
+                          length--;
+                          bool = 1;
+                      }
+                  }
+                  //System.out.println( "dash : "+dash);
+              }
+             if(bool == 0 && life!=1 && !input_Word.equals(Current_word)){
+            //if guessed wrong
                 life--;
-            } else{
-                original_length = length;
-            }
-            
-            
-            if (sb.length() == 0){
-               System.out.print("YOU WON");
-               Score++;
-            }
-            else{
-                System.out.println("Remaining life: "+life);
-            }
-        }
-    }
+                System.out.println( "dash : "+dash);
+                System.out.println(
+                "Guessed Wrong...");
+                
+                
+             }
+             else if (input_Word.equals(Current_word)){
+                  System.out.println( "dash : "+Current_word+"!!!!");
+                  //if guessed the whole word right
+                  
+                  randomNum = rand.nextInt(51528) + 0;
+                  Current_word = choosenWord[randomNum];
+                  life = Current_word.length();
+                  dash = new StringBuilder(Current_word);
+                  //load the dash
+                  for (int n = 0; n<life; n++){
+                    dash.setCharAt(n, '-');
+                  }
+                  System.out.println("Congrates!!!");
+                  score++;
+                  
+              }
+             else if(life == 1){
+                 score--;
+                 System.out.println("Sorry...");
+                 System.out.println("The word is "+Current_word);
+                 randomNum = rand.nextInt(51528) + 0;
+                  Current_word = choosenWord[randomNum];
+                  life = Current_word.length();
+                  dash = new StringBuilder(Current_word);
+                  //load the dash
+                  for (int n = 0; n<life; n++){
+                    dash.setCharAt(n, '-');
+                  }
+                  
+                  
+                  System.out.println("Generating new word");
+                  System.out.println( "dash : "+dash);
+//                  System.out.println("Current word: "+Current_word+"  Remaining attempt: "+ life +"    Score:"+score);
+//                  System.out.println(
+//                "Guess the word: ");
+//                  input_Word = KeyboardEntry.nextLine();//continue reading from the client
+             }
+              else{
+                  //show the location of the guessed leter to the user
+                  System.out.println( "dash : "+dash);
+//                  System.out.println("Current word: "+Current_word+"  Remaining attempt: "+ life +"    Score:"+score);
+//                  System.out.println(
+//                "Guess the word: ");
+//                  input_Word = KeyboardEntry.nextLine();//continue reading from the client
+              } 
+            System.out.println("Current word: "+Current_word+"  Remaining attempt: "+ life +"    Score:"+score);
+            System.out.println("Guess the word: ");
+            input_Word = KeyboardEntry.nextLine();//continue reading from the client 
+          }
+          
+            System.out.println("Toatl Score: "+score);
+                
+
+       //Close the connection after the dialogue is complete
+    }  
+    
 }
