@@ -17,7 +17,7 @@ public class Hangman_server {
    private static int numWords = 51528;// number of words in the word txt file
    private static ServerSocket Hangman_server_socket;//decalre the socket 
    private static final int PORT = 1234;// port number between the server and the client
-
+   private static Socket linkA;
    public static void main(String[] args) throws IOException{
         
      
@@ -32,7 +32,7 @@ public class Hangman_server {
        }
        do {
             //Wait for client...
-            Socket linkA = Hangman_server_socket.accept();
+            linkA = Hangman_server_socket.accept();
             System.out.println("\nNew client accepted.\n");
             handle_Hangman_client handler = new handle_Hangman_client(linkA);
             handler.start();

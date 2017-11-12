@@ -30,11 +30,13 @@ public class Hangman_client {
    }
    private static void accessServer(){
        Socket Client_Link = null;
+       Scanner Client_input = null;
+       PrintWriter Client_output = null;
        try{
            Client_Link = new Socket(host,PORT);
            //Set up input & output streams 
-           Scanner Client_input = new Scanner( Client_Link.getInputStream( ) );
-           PrintWriter Client_output = new PrintWriter ( Client_Link.getOutputStream( ), true );
+           Client_input = new Scanner( Client_Link.getInputStream( ) );
+           Client_output = new PrintWriter ( Client_Link.getOutputStream( ), true );
            //get input from keyboard
            Scanner KeyboardEntry = new Scanner(System.in);
 
