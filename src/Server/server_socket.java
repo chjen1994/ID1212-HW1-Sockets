@@ -60,7 +60,7 @@ class handle_Hangman_client extends Thread {
     
     public void run(){
         //read file
-        String read_file = "/Users/davidren/Desktop/words.txt";// open up the file
+        String read_file = "words.txt";// open up the file
         
                 try{
             FileReader file_reader = new FileReader (read_file);

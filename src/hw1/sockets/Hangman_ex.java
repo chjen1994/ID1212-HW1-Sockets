@@ -23,7 +23,7 @@ public class Hangman_ex {
         
         String[] choosenWord = new String [10000000];
         
-        String read_file = "/Users/davidren/Desktop/words.txt";// open up the file
+        String read_file = "words.txt";// open up the file
         try{
             FileReader file_reader = new FileReader (read_file);
             BufferedReader bufferedReader = new BufferedReader(file_reader);
