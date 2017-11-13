@@ -68,6 +68,10 @@ public class client_thread extends Thread{
                Client_output.println(Input_message);//output the word from the keyboard to the server
                Display_message = Client_input.nextLine();//get the word from the server 
                System.out.println(Display_message);//Display the message from the server
+               Display_message = Client_input.nextLine();//get the word from the server 
+               System.out.println(Display_message);//Display the message from the server
+               Display_message = Client_input.nextLine();//get the word from the server 
+               System.out.println(Display_message);//Display the message from the server
            }while(!Input_message.equals("QUIT"));
     }
 }
