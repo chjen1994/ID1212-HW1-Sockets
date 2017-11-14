@@ -20,6 +20,7 @@ public class client_socket {
    private static InetAddress host;
    public static void main(String[] args){
        try {
+           //consider when not 
             host = InetAddress.getLocalHost();
         }
         catch(UnknownHostException uhEx)

@@ -15,7 +15,7 @@ import java.util.*;
  * @author davidren
  */
 public class server_socket {
-       private static int numWords = 51528;// number of words in the word txt file
+   private static int numWords = 51528;// number of words in the word txt file
    private static ServerSocket Hangman_server_socket;//decalre the socket 
    private static final int PORT = 1234;// port number between the server and the client
    private static Socket linkA;
@@ -33,6 +33,7 @@ public class server_socket {
        }
        do {
             //Wait for client...
+            //limit the number of server_thread
             linkA = Hangman_server_socket.accept();
             System.out.println("\nNew client accepted.\n");
             server_thread server_handler = new server_thread(linkA);

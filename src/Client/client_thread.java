@@ -13,7 +13,11 @@ import java.util.*;
  *
  * @author davidren
  */
-public class client_thread extends Thread{
+
+
+//have another multithread for litsening from the server
+
+public class client_thread extends Thread implements Runnable{
     private static int PORT;
     private static InetAddress host;
     private static Socket Client_Link = null;
@@ -28,7 +32,7 @@ public class client_thread extends Thread{
     public void run(){
         
         connectServer();
-        GameRule();
+       
         getinput();
        
         
@@ -46,6 +50,7 @@ public class client_thread extends Thread{
         try{
             Client_Link = new Socket(host,PORT);
            //Set up input & output streams 
+           //bite not stream
             Client_input = new Scanner( Client_Link.getInputStream( ) );
             Client_output = new PrintWriter ( Client_Link.getOutputStream( ), true );
 
@@ -54,14 +59,21 @@ public class client_thread extends Thread{
             System.exit(1);
         }
     }
-    void GameRule(){
-        System.out.println("******HANGMAN*******");
-        System.out.println("RULE:Guess the word by either entering a letter or the word");
-        System.out.println("Leave the game by entering QUIT");
-    }
+
+   
+
+
+//have another multithread for litsening from the server
     void getinput(){
-        
         String Display_message, Input_message;
+        Display_message = Client_input.nextLine();//get the word from the server 
+        System.out.println(Display_message);//Display the message from the server
+        Display_message = Client_input.nextLine();//get the word from the server 
+        System.out.println(Display_message);//Display the message from the server
+        Display_message = Client_input.nextLine();//get the word from the server 
+        System.out.println(Display_message);//Display the message from the server
+
+        
            do{
                System.out.println("Guess the word");
                Input_message = KeyboardEntry.nextLine();
@@ -72,6 +84,10 @@ public class client_thread extends Thread{
                System.out.println(Display_message);//Display the message from the server
                Display_message = Client_input.nextLine();//get the word from the server 
                System.out.println(Display_message);//Display the message from the server
+//               while (Client_input.nextLine()!= null){
+//                   Display_message = Client_input.nextLine();//get the word from the server 
+//                   System.out.println(Display_message);
+//               }
            }while(!Input_message.equals("QUIT"));
     }
 }
