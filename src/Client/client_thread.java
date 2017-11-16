@@ -8,6 +8,8 @@ package Client;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,9 +23,10 @@ public class client_thread extends Thread implements Runnable{
     private static int PORT;
     private static InetAddress host;
     private static Socket Client_Link = null;
-    private static Scanner Client_input = null;
+    private static BufferedReader Client_input = null;
     private static PrintWriter Client_output = null;
     private static Scanner KeyboardEntry = new Scanner(System.in);
+    
     client_thread (int portNum, InetAddress ip){
         PORT = portNum;
         host = ip;
@@ -31,17 +34,22 @@ public class client_thread extends Thread implements Runnable{
     @Override
     public void run(){
         
-        connectServer();
-       
-        getinput();
-       
-        
         try{
-               System.out.println("Leaving the game...");
-               Client_Link.close();
+            
+            connectServer();
+            
+            getinput();
+            
+            
+            try{
+                System.out.println("Leaving the game...");
+                Client_Link.close();
             }catch(IOException ioEx){
-               System.out.println("Unable to leave the game!!");
-               System.exit(1);
+                System.out.println("Unable to leave the game!!");
+                System.exit(1);
+            }
+        }catch(IOException ex){
+               Logger.getLogger(client_thread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
        
@@ -51,7 +59,7 @@ public class client_thread extends Thread implements Runnable{
             Client_Link = new Socket(host,PORT);
            //Set up input & output streams 
            //bite not stream
-            Client_input = new Scanner( Client_Link.getInputStream( ) );
+            Client_input = new BufferedReader ( new InputStreamReader(Client_Link.getInputStream( ) ));
             Client_output = new PrintWriter ( Client_Link.getOutputStream( ), true );
 
         } catch(IOException ioEx){
@@ -64,30 +72,25 @@ public class client_thread extends Thread implements Runnable{
 
 
 //have another multithread for litsening from the server
-    void getinput(){
-        String Display_message, Input_message;
-        Display_message = Client_input.nextLine();//get the word from the server 
-        System.out.println(Display_message);//Display the message from the server
-        Display_message = Client_input.nextLine();//get the word from the server 
-        System.out.println(Display_message);//Display the message from the server
-        Display_message = Client_input.nextLine();//get the word from the server 
-        System.out.println(Display_message);//Display the message from the server
-
+    void getinput() throws IOException{
+        String Input_message;
+        //int connection = 1;
+        client_listener servere_message_handler = new client_listener(Client_input);
+        servere_message_handler.start();
         
-           do{
-               System.out.println("Guess the word");
+        
+//        Display_message = Client_input.readLine();
+//        while (Display_message != null){
+//            System.out.println(Display_message);
+//            Display_message = Client_input.readLine();    
+//        }
+        Input_message = KeyboardEntry.nextLine();
+        Client_output.println(Input_message);
+           while(!Input_message.equals("QUIT")){
+
                Input_message = KeyboardEntry.nextLine();
-               Client_output.println(Input_message);//output the word from the keyboard to the server
-               Display_message = Client_input.nextLine();//get the word from the server 
-               System.out.println(Display_message);//Display the message from the server
-               Display_message = Client_input.nextLine();//get the word from the server 
-               System.out.println(Display_message);//Display the message from the server
-               Display_message = Client_input.nextLine();//get the word from the server 
-               System.out.println(Display_message);//Display the message from the server
-//               while (Client_input.nextLine()!= null){
-//                   Display_message = Client_input.nextLine();//get the word from the server 
-//                   System.out.println(Display_message);
-//               }
+               Client_output.println(Input_message);
+
            }while(!Input_message.equals("QUIT"));
     }
 }

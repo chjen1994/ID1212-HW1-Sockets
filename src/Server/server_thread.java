@@ -43,9 +43,14 @@ public class server_thread extends Thread implements Runnable{
     @Override
     public void run(){
         //read file
-        storeWord();
-        getWord();
-        playGame();
+        hangman_game player = new hangman_game(Server_input,Server_output);
+        
+        player.storeWord();
+        //storeWord();
+        player.getWord();
+        player.playGame();
+        //getWord();
+        //playGame();
         
         
         try {
@@ -59,170 +64,6 @@ public class server_thread extends Thread implements Runnable{
            }
        //Close the connection after the dialogue is complete
     }
-    private void storeWord(){
-        String read_file = "words.txt";// open up the file
-        
-        try{
-            FileReader file_reader = new FileReader (read_file);
-            BufferedReader bufferedReader = new BufferedReader(file_reader);
-            number = 0;
-           
-           while((choosenWord[number] = bufferedReader.readLine()) != null) { 
-               System.out.println(choosenWord[number]);
-                   number++;
-            }
-           System.out.println(number);
-           bufferedReader.close();
-        } catch(FileNotFoundException ex){
-            System.out.println(
-                "Unable to open file '");                
-        }
-        catch(IOException ex) {
-            System.out.println(
-                "Error reading file '");                  
-            // Or we could just do this: 
-            // ex.printStackTrace();
-        }
-            //handle reading the file
-    }
-    private void getWord(){
-        randomNum = rand.nextInt(number) + 0;
-          //get a reandom word
-        Current_word = choosenWord[randomNum];
-          //get the life of one attempt
-        
-        life = Current_word.length();
-        
-        dash = new StringBuilder(Current_word);
-        
-        //load the dash
-        for (int n = 0; n<life; n++){
-            dash.setCharAt(n, '-');
-        }
-    }
-    private void playGame(){
-        //out put the dash
-        System.out.println( "dash : "+dash);
-        
-        int length = life;
-        int score = 0;
-        Server_output.println("******HANGMAN*******");
-        Server_output.println("RULE:Guess the word by either entering a letter or the word");
-        Server_output.println("Leave the game by entering QUIT");
-//        System.out.println("Current word: "+Current_word +"  life:"+ life + "  score:" + score+ "  length:"+ length);
-//        System.out.println("You are now playing hangman!!!!");
-        //System.out.println("Guess the word: ");
-        
-        String input_Word = new String(Server_input.nextLine());
-        System.out.println(input_Word);
-           //initialize the game by creating the word, read the file, 
-        String QUIT = new String("QUIT");
-        //System.out.println(input_Word); 
-        while (!input_Word.equals(QUIT)) {
-            
-             //read and send data 
-             //Repeat above until 'QUIT' sent by client...
-            int bool = 0;
-             
-             //read and send data 
-             //Repeat above until 'QUIT' sent by client...
-              if (input_Word.length()==1){
-                  //if guessed any letter right, the length will decrease
-                  for(int j = 0; j<Current_word.length(); j++){
-                      if (input_Word.charAt(0) == Current_word.charAt(j) ){
-                          //Current_word.deleteCharAt(j);
-                          if (input_Word.charAt(0) != dash.charAt(j)){
-                            dash.setCharAt(j, Current_word.charAt(j));
-                            //length--;
-                            bool = 1;
-                          }else{
-                            bool = 2;  
-                          }
-                        
-                      }
-                  }
-                  //System.out.println( "dash : "+dash);
-              }
-             if(bool == 0 && life!=1 && !input_Word.equals(Current_word)){
-            //if guessed wrong
-                life--;
-                Server_output.println( "dash : "+dash);
-                Server_output.println("Guessed Wrong...");
-                
-                
-             }
-             else if (bool == 2){
-                 //if guessed the letter already
-                //life--;
-                Server_output.println( "dash : "+dash);
-                Server_output.println("You have guessed this letter already");
-             }
-             else if (input_Word.equals(Current_word)){
-                 //if guessed the whole word right
-                  Server_output.println( "dash : "+Current_word+"!!!!");
-                  Server_output.println("Congrates!!!");
-                  score++;
-                  //change the length 
-                  randomNum = rand.nextInt(number) + 0;
-                  Current_word = choosenWord[randomNum];
-                  life = Current_word.length();
-                  dash = new StringBuilder(Current_word);
-                  //load the dash
-                  for (int n = 0; n<life; n++){
-                    dash.setCharAt(n, '-');
-                  }
-                  
-                  
-              }
-             else if (dash == new StringBuilder(Current_word)){
-                  Server_output.println( "dash : "+Current_word+"!!!!");
-                  Server_output.println("Congrates!!!");
-                  score++;
-                  //if guessed the whole word right
-                  
-                  randomNum = rand.nextInt(number) + 0;
-                  Current_word = choosenWord[randomNum];
-                  life = Current_word.length();
-                  dash = new StringBuilder(Current_word);
-                  //load the dash
-                  for (int n = 0; n<life; n++){
-                    dash.setCharAt(n, '-');
-                  }
-             }
-             else if(life == 1){
-                 score--;
-                 Server_output.println("Sorry...The word is "+Current_word+"....Generating new word ");
-                 randomNum = rand.nextInt(number) + 0;
-//                 randomNum = rand.nextInt(51528) + 0;
-                 Current_word = choosenWord[randomNum];
-                  life = Current_word.length();
-                  dash = new StringBuilder(Current_word);
-                  //load the dash
-                  for (int n = 0; n<life; n++){
-                    dash.setCharAt(n, '-');
-                  }
-                  
-                  
-                 
-                  Server_output.println( "dash : "+dash);
-//                  System.out.println("Current word: "+Current_word+"  Remaining attempt: "+ life +"    Score:"+score);
-//                  System.out.println(
-//                "Guess the word: ");
-//                  input_Word = KeyboardEntry.nextLine();//continue reading from the client
-             }
-              else{
-                  //show the location of the guessed leter to the user
-                  Server_output.println("Guessed right!");
-                  Server_output.println( "dash : "+dash);
-                  
-              }
-            Server_output.println("Current word: "+Current_word+"  Remaining attempt: "+ life +"    Score:"+score);
-            //Server_output.println("Guess the word: ");
-            input_Word = Server_input.nextLine();//continue reading from the client 
-          }
-          
-            Server_output.println("Toatl Score: "+score);
-                
-    }
+
 
 }
