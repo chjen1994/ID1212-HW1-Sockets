@@ -46,11 +46,8 @@ public class server_thread extends Thread implements Runnable{
         hangman_game player = new hangman_game(Server_input,Server_output);
         
         player.storeWord();
-        //storeWord();
         player.getWord();
         player.playGame();
-        //getWord();
-        //playGame();
         
         
         try {

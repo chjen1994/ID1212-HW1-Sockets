@@ -35,20 +35,7 @@ public class client_listener extends Thread implements Runnable{
        
     }
     void getInput(){
-//        String Display_message;
-//        
-//        
-//        try {
-////            Display_message = Client_input.readLine();
-//            while ((Display_message = Client_input.readLine()) != null){
-//                System.out.println(Display_message);
-//                
-////                Display_message = Client_input.readLine();    
-//            }
-//            Client_input.close();
-//        }  catch (IOException ex) {
-//            Logger.getLogger(client_listener.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
         String Input_message;
         Input_message = KeyboardEntry.nextLine();
         Client_output.println(Input_message);

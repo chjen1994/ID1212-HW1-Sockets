@@ -32,15 +32,10 @@ public class client_thread extends Thread implements Runnable{
         host = ip;
     }
     @Override
-    public void run(){
-        
+    public void run(){  
         try{
-            
             connectServer();
-            
-            getinput();
-            
-            
+            getinput(); 
             try{
                 System.out.println("Leaving the game...");
                 Client_Link.close();
@@ -52,13 +47,12 @@ public class client_thread extends Thread implements Runnable{
                Logger.getLogger(client_thread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-       
-    
+        
     void connectServer(){
         try{
             Client_Link = new Socket(host,PORT);
            //Set up input & output streams 
-           //bite not stream
+
             Client_input = new BufferedReader ( new InputStreamReader(Client_Link.getInputStream( ) ));
             Client_output = new PrintWriter ( Client_Link.getOutputStream( ), true );
 
@@ -73,18 +67,11 @@ public class client_thread extends Thread implements Runnable{
 
 //have another multithread for litsening from the server
     void getinput() throws IOException{
-        String Input_message;
-        //int connection = 1;
-        //client_listener servere_message_handler = new client_listener(Client_input);
+        
+
         client_listener servere_message_handler = new client_listener(Client_output);
         servere_message_handler.start();
-        
-        
-//        Display_message = Client_input.readLine();
-//        while (Display_message != null){
-//            System.out.println(Display_message);
-//            Display_message = Client_input.readLine();    
-//        }
+
         String Display_message;
         
         try {
@@ -99,14 +86,6 @@ public class client_thread extends Thread implements Runnable{
         }  catch (IOException ex) {
             Logger.getLogger(client_listener.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        Input_message = KeyboardEntry.nextLine();
-//        Client_output.println(Input_message);
-//           while(!Input_message.equals("QUIT")){
-//
-//               Input_message = KeyboardEntry.nextLine();
-//               Client_output.println(Input_message);
-//
-//           }
-//           Client_output.close();
+
     }
 }

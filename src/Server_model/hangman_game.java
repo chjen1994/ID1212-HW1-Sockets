@@ -95,26 +95,20 @@ public class hangman_game {
         //System.out.println("Guess the word: ");
         
         String input_Word = new String(Server_input.nextLine());
-        //System.out.println(input_Word);
-           //initialize the game by creating the word, read the file, 
         String QUIT = new String("QUIT");
-        //System.out.println(input_Word); 
         while (!input_Word.equals(QUIT)) {
-            
              //read and send data 
              //Repeat above until 'QUIT' sent by client...
             int bool = 0;
-             
              //read and send data 
              //Repeat above until 'QUIT' sent by client...
               if (input_Word.length()==1){
                   //if guessed any letter right, the length will decrease
                   for(int j = 0; j<Current_word.length(); j++){
                       if (input_Word.charAt(0) == Current_word.charAt(j) ){
-                          //Current_word.deleteCharAt(j);
                           if (input_Word.charAt(0) != dash.charAt(j)){
                             dash.setCharAt(j, Current_word.charAt(j));
-                            //length--;
+                            
                             bool = 1;
                           }else{
                             bool = 2;  
@@ -122,7 +116,7 @@ public class hangman_game {
                         
                       }
                   }
-                  //System.out.println( "dash : "+dash);
+                  
               }
              if(bool == 0 && life!=1 && !input_Word.equals(Current_word)){
             //if guessed wrong
@@ -130,9 +124,7 @@ public class hangman_game {
                 Server_output.println( "dash : "+dash);
                 Server_output.flush();
                 Server_output.println("Guessed Wrong...");
-                Server_output.flush();
-                
-                
+                Server_output.flush(); 
              }
              else if (bool == 2){
                  //if guessed the letter already
@@ -145,16 +137,7 @@ public class hangman_game {
                   Server_output.println( "dash : "+Current_word+"!!!!");
                   Server_output.println("Congrates!!!");
                   score++;
-                  //change the length 
-//                  randomNum = rand.nextInt(number) + 0;
-//                  Current_word = choosenWord[randomNum];
-//                  life = Current_word.length();
-//                  dash = new StringBuilder(Current_word);
-//                  //load the dash
-//                  for (int n = 0; n<life; n++){
-//                    dash.setCharAt(n, '-');
-//                  }
-                    getWord();
+                  getWord();
                   
                   
               }
@@ -163,37 +146,15 @@ public class hangman_game {
                   Server_output.println("Congrates!!!");
                   score++;
                   //if guessed the whole word right
-                  
-//                  randomNum = rand.nextInt(number) + 0;
-//                  Current_word = choosenWord[randomNum];
-//                  life = Current_word.length();
-//                  dash = new StringBuilder(Current_word);
-//                  //load the dash
-//                  for (int n = 0; n<life; n++){
-//                    dash.setCharAt(n, '-');
-//                  }
                   getWord();
              }
              else if(life == 1){
                  score--;
                  Server_output.println("Sorry...The word is '"+Current_word+"'....Generating new word ");
-//                 randomNum = rand.nextInt(number) + 0;
-////                 randomNum = rand.nextInt(51528) + 0;
-//                 Current_word = choosenWord[randomNum];
-//                  life = Current_word.length();
-//                  dash = new StringBuilder(Current_word);
-//                  //load the dash
-//                  for (int n = 0; n<life; n++){
-//                    dash.setCharAt(n, '-');
-//                  }
                   getWord();
                   
                  
                   Server_output.println( "dash : "+dash);
-//                  System.out.println("Current word: "+Current_word+"  Remaining attempt: "+ life +"    Score:"+score);
-//                  System.out.println(
-//                "Guess the word: ");
-//                  input_Word = KeyboardEntry.nextLine();//continue reading from the client
              }
               else{
                   //show the location of the guessed leter to the user
@@ -205,7 +166,6 @@ public class hangman_game {
             Server_output.flush();
             Server_output.println("Guess the word");
             Server_output.flush();
-//Server_output.println("Guess the word: ");
             input_Word = Server_input.nextLine();//continue reading from the client 
           }
           
