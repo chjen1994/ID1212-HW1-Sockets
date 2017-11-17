@@ -44,10 +44,10 @@ public class hangman_game {
             number = 0;
            
            while((choosenWord[number] = bufferedReader.readLine()) != null) { 
-               System.out.println(choosenWord[number]);
+               //System.out.println(choosenWord[number]);
                    number++;
             }
-           System.out.println(number);
+           //System.out.println(number);
            bufferedReader.close();
         } catch(FileNotFoundException ex){
             System.out.println(
@@ -78,7 +78,7 @@ public class hangman_game {
     }
     public void playGame(){
         //out put the dash
-        System.out.println( "dash : "+dash);
+        //System.out.println( "dash : "+dash);
         
         int length = life;
         int score = 0;
@@ -95,7 +95,7 @@ public class hangman_game {
         //System.out.println("Guess the word: ");
         
         String input_Word = new String(Server_input.nextLine());
-        System.out.println(input_Word);
+        //System.out.println(input_Word);
            //initialize the game by creating the word, read the file, 
         String QUIT = new String("QUIT");
         //System.out.println(input_Word); 
