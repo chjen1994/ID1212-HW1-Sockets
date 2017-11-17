@@ -84,7 +84,10 @@ public class hangman_game {
         int score = 0;
         Server_output.println("******HANGMAN*******");
         Server_output.println("RULE:Guess the word by either entering a letter or the word");
+        Server_output.println("You must guess the whole word in order to get the points");
         Server_output.println("Leave the game by entering QUIT");
+        Server_output.println("Remaining attempt: "+ life +"    Score:"+score);
+        Server_output.println( "dash : "+dash);
         Server_output.println("Guess the word");
         Server_output.flush();
 //        System.out.println("Current word: "+Current_word +"  life:"+ life + "  score:" + score+ "  length:"+ length);
@@ -173,7 +176,7 @@ public class hangman_game {
              }
              else if(life == 1){
                  score--;
-                 Server_output.println("Sorry...The word is "+Current_word+"....Generating new word ");
+                 Server_output.println("Sorry...The word is '"+Current_word+"'....Generating new word ");
 //                 randomNum = rand.nextInt(number) + 0;
 ////                 randomNum = rand.nextInt(51528) + 0;
 //                 Current_word = choosenWord[randomNum];
@@ -198,7 +201,7 @@ public class hangman_game {
                   Server_output.println( "dash : "+dash);
                   
               }
-            Server_output.println("Current word: "+Current_word+"  Remaining attempt: "+ life +"    Score:"+score);
+            Server_output.println("  Remaining attempt: "+ life +"    Score:"+score);
             Server_output.flush();
             Server_output.println("Guess the word");
             Server_output.flush();
@@ -207,7 +210,9 @@ public class hangman_game {
           }
           
             Server_output.println("Toatl Score: "+score);
-                
+            Server_output.println("QUITING");
+            Server_output.close();
+            Server_input.close();
     }
 
 }

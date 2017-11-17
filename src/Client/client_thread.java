@@ -46,7 +46,7 @@ public class client_thread extends Thread implements Runnable{
                 Client_Link.close();
             }catch(IOException ioEx){
                 System.out.println("Unable to leave the game!!");
-                System.exit(1);
+                System.exit(0);
             }
         }catch(IOException ex){
                Logger.getLogger(client_thread.class.getName()).log(Level.SEVERE, null, ex);
@@ -75,7 +75,8 @@ public class client_thread extends Thread implements Runnable{
     void getinput() throws IOException{
         String Input_message;
         //int connection = 1;
-        client_listener servere_message_handler = new client_listener(Client_input);
+        //client_listener servere_message_handler = new client_listener(Client_input);
+        client_listener servere_message_handler = new client_listener(Client_output);
         servere_message_handler.start();
         
         
@@ -84,13 +85,28 @@ public class client_thread extends Thread implements Runnable{
 //            System.out.println(Display_message);
 //            Display_message = Client_input.readLine();    
 //        }
-        Input_message = KeyboardEntry.nextLine();
-        Client_output.println(Input_message);
-           while(!Input_message.equals("QUIT")){
-
-               Input_message = KeyboardEntry.nextLine();
-               Client_output.println(Input_message);
-
-           }while(!Input_message.equals("QUIT"));
+        String Display_message;
+        
+        try {
+//            Display_message = Client_input.readLine();
+            while (Client_Link.isClosed()==false){
+                Display_message = Client_input.readLine();
+                System.out.println(Display_message);
+                
+//                    
+            }
+            Client_input.close();
+        }  catch (IOException ex) {
+            Logger.getLogger(client_listener.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        Input_message = KeyboardEntry.nextLine();
+//        Client_output.println(Input_message);
+//           while(!Input_message.equals("QUIT")){
+//
+//               Input_message = KeyboardEntry.nextLine();
+//               Client_output.println(Input_message);
+//
+//           }
+//           Client_output.close();
     }
 }
